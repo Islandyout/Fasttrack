@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Under Maintenance — Fasttrack Registry</title>
+  <meta name="description" content="Fasttrack Registry is currently undergoing maintenance. We'll be back shortly." />
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+<body data-page="maintenance">
+
+  <main class="maintenance-page" role="main">
+
+    <p class="maintenance-logo" data-maint-logo>
+      Fasttrack <span>Registry</span>
+    </p>
+
+    <span class="maintenance-icon" aria-hidden="true">🔧</span>
+
+    <h1 data-maint-heading>We'll Be Back Soon</h1>
+    <p data-maint-sub></p>
+    <p data-maint-eta></p>
+    <p data-maint-contact></p>
+
+    <a
+      href="#"
+      class="btn btn--primary btn--lg"
+      data-maint-wa
+      target="_blank"
+      rel="noopener"
+    >Contact via WhatsApp</a>
+
+  </main>
+
+  <!--
+    IMPORTANT: router.js is NOT loaded on maintenance.html
+    to prevent redirect loops. config.js and main.js only.
+  -->
+  <script src="./js/config.js" defer></script>
+  <script src="./js/main.js"   defer></script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book a Consultation — Fasttrack Registry | Jamaica</title>
+  <meta name="description" content="Get in touch with Fasttrack Registry to start your business registration. Reach us via WhatsApp or email for a free consultation." />
+
+  <!-- Open Graph -->
+  <meta property="og:type"        content="website" />
+  <meta property="og:url"         content="https://fasttrackregistry.com/booking.html" />
+  <meta property="og:title"       content="Book a Consultation — Fasttrack Registry" />
+  <meta property="og:description" content="Get in touch with Fasttrack Registry to start your business registration." />
+
+  <link rel="canonical" href="https://fasttrackregistry.com/booking.html" />
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+<body data-page="booking">
+
+  <!-- ── Navigation ─────────────────────────────────────── -->
+  <header data-nav role="banner">
+    <div class="container nav__inner">
+      <a href="./index.html" class="nav__logo" data-nav-logo aria-label="Fasttrack Registry home">
+        Fasttrack <span>Registry</span>
+      </a>
+
+      <nav aria-label="Main navigation">
+        <ul class="nav__links" data-nav-links></ul>
+      </nav>
+
+      <a href="./booking.html" class="btn btn--primary nav__cta" data-nav-cta>Get Started</a>
+
+      <button
+        class="nav__toggle"
+        data-nav-toggle
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="mobile-menu-booking"
+      >
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile menu -->
+  <nav id="mobile-menu-booking" data-nav-mobile aria-label="Mobile navigation">
+    <ul data-nav-links></ul>
+    <a href="./booking.html" class="btn btn--primary" data-nav-cta>Get Started</a>
+  </nav>
+
+  <main>
+
+    <!-- ── Booking Hero ───────────────────────────────────── -->
+    <section class="booking-hero" aria-labelledby="booking-heading">
+      <div class="container">
+        <p class="section-label" data-booking-eyebrow></p>
+        <h1 id="booking-heading" data-booking-heading></h1>
+        <p data-booking-sub></p>
+      </div>
+    </section>
+
+    <!-- ── Contact Options ────────────────────────────────── -->
+    <section class="booking-section" aria-label="Contact options">
+      <div class="container">
+        <div class="contact-options" data-booking-options></div>
+
+        <div class="booking-reassurances" data-reveal>
+          <h3>What to expect</h3>
+          <ul data-booking-reassurances></ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── Footer ────────────────────────────────────────────── -->
+  <footer role="contentinfo">
+    <div class="container">
+      <div class="footer__inner">
+        <div>
+          <p class="footer__brand-name" data-footer-logo></p>
+          <p class="footer__tagline" data-footer-tagline></p>
+        </div>
+        <nav aria-label="Footer navigation">
+          <ul class="footer__links" data-footer-links></ul>
+        </nav>
+        <div class="footer__contact">
+          <a href="#" data-footer-email-link>
+            <span data-footer-email></span>
+          </a>
+          <a href="#" data-footer-whatsapp-link target="_blank" rel="noopener">
+            <span data-footer-whatsapp></span>
+          </a>
+        </div>
+      </div>
+      <p class="footer__bottom" data-footer-legal></p>
+    </div>
+  </footer>
+
+  <script src="./js/config.js" defer></script>
+  <script src="./js/router.js" defer></script>
+  <script src="./js/main.js"   defer></script>
+</body>
+</html>
