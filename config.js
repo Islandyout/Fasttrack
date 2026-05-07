@@ -20,10 +20,10 @@ window.FT.config = {
     name: "Fasttrack Registry",
     tagline: "Business Registration Made Simple",
     description: "Jamaica's trusted partner for fast, accurate business registration and compliance filing. We handle the paperwork — you build the dream.",
-    url: "https://fasttrackregistry.com",
-    email: "info@fasttrackregistry.com",
-    whatsapp: "18761234567", // Jamaica number without + or spaces
-    whatsappDisplay: "+1 (876) 123-4567",
+    url: "https://islandyout.github.io/Fasttrack/",
+    email: "fasttrackregistry@gmail.com",
+    whatsapp: "18762275562", // Jamaica number without + or spaces
+    whatsappDisplay: "+1 (876) 227-5562",
     location: "Kingston, Jamaica",
   },
 
