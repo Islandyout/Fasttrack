@@ -1,153 +1,87 @@
 // ============================================================
 // FASTTRACK REGISTRY — MAIN.JS
-// UI logic: content injection, nav, animations, page behaviour
+// Waits for Supabase config, then injects all content.
 // ============================================================
 
 (function () {
   "use strict";
 
-  // ── Namespace guard ────────────────────────────────────────
   window.FT = window.FT || {};
-  var cfg = window.FT.config;
-  if (!cfg) return;
 
-  // ── Helpers ────────────────────────────────────────────────
-  function el(selector, root) {
-    return (root || document).querySelector(selector);
-  }
-  function els(selector, root) {
-    return (root || document).querySelectorAll(selector);
-  }
-  function setText(selector, value, root) {
-    var node = el(selector, root);
-    if (node) node.textContent = value;
-  }
-  function setAttr(selector, attr, value, root) {
-    var node = el(selector, root);
-    if (node) node.setAttribute(attr, value);
-  }
-  function setHTML(selector, value, root) {
-    var node = el(selector, root);
-    if (node) node.innerHTML = value;
-  }
+  function el(s, r)  { return (r || document).querySelector(s); }
+  function els(s, r) { return (r || document).querySelectorAll(s); }
+  function setText(s, v) { var n = el(s); if (n) n.textContent = v; }
+  function setAttr(s, a, v) { var n = el(s); if (n) n.setAttribute(a, v); }
 
-  // ── WhatsApp URL builder ───────────────────────────────────
-  function whatsappUrl(message) {
-    return (
-      "https://wa.me/" +
-      cfg.site.whatsapp +
-      "?text=" +
-      encodeURIComponent(message)
-    );
+  function whatsappUrl(msg) {
+    return "https://wa.me/" + window.FT.config.site.whatsapp + "?text=" + encodeURIComponent(msg);
   }
-
-  // ── Mailto URL builder ─────────────────────────────────────
   function mailtoUrl(subject, body) {
-    return (
-      "mailto:" +
-      cfg.site.email +
-      "?subject=" +
-      encodeURIComponent(subject) +
-      "&body=" +
-      encodeURIComponent(body)
-    );
+    return "mailto:" + window.FT.config.site.email +
+      "?subject=" + encodeURIComponent(subject) +
+      "&body=" + encodeURIComponent(body);
   }
 
-  // ============================================================
-  // NAV
-  // ============================================================
+  // ── Nav ───────────────────────────────────────────────────
   function buildNav() {
-    var logoEl = el("[data-nav-logo]");
-    if (logoEl) logoEl.textContent = cfg.nav.logo;
+    var cfg = window.FT.config;
+    els("[data-nav-links]").forEach(function (container) {
+      container.innerHTML = cfg.nav.links.map(function (l) {
+        return '<li><a href="' + l.href + '">' + l.label + "</a></li>";
+      }).join("");
+    });
+    els("[data-nav-cta]").forEach(function (el) {
+      el.textContent = cfg.nav.cta.label;
+      el.setAttribute("href", cfg.nav.cta.href);
+    });
 
-    var linksContainer = el("[data-nav-links]");
-    if (linksContainer) {
-      var html = "";
-      cfg.nav.links.forEach(function (link) {
-        html +=
-          '<li><a href="' + link.href + '">' + link.label + "</a></li>";
-      });
-      linksContainer.innerHTML = html;
-    }
-
-    var ctaEl = el("[data-nav-cta]");
-    if (ctaEl) {
-      ctaEl.textContent = cfg.nav.cta.label;
-      ctaEl.setAttribute("href", cfg.nav.cta.href);
-    }
-
-    // Mobile hamburger toggle
     var toggle = el("[data-nav-toggle]");
-    var mobileMenu = el("[data-nav-mobile]");
-    if (toggle && mobileMenu) {
+    var mobile = el("[data-nav-mobile]");
+    if (toggle && mobile) {
       toggle.addEventListener("click", function () {
-        var open = mobileMenu.classList.toggle("is-open");
+        var open = mobile.classList.toggle("is-open");
         toggle.setAttribute("aria-expanded", open ? "true" : "false");
         toggle.classList.toggle("is-active", open);
       });
-
-      // Close on link click
-      els("a", mobileMenu).forEach(function (a) {
+      els("a", mobile).forEach(function (a) {
         a.addEventListener("click", function () {
-          mobileMenu.classList.remove("is-open");
+          mobile.classList.remove("is-open");
           toggle.setAttribute("aria-expanded", "false");
           toggle.classList.remove("is-active");
         });
       });
     }
-
-    // Sticky nav shadow on scroll
     var nav = el("[data-nav]");
     if (nav) {
-      window.addEventListener(
-        "scroll",
-        function () {
-          nav.classList.toggle("is-scrolled", window.scrollY > 20);
-        },
-        { passive: true }
-      );
+      window.addEventListener("scroll", function () {
+        nav.classList.toggle("is-scrolled", window.scrollY > 20);
+      }, { passive: true });
     }
   }
 
-  // ============================================================
-  // FOOTER
-  // ============================================================
+  // ── Footer ────────────────────────────────────────────────
   function buildFooter() {
-    var footer = cfg.footer;
+    var cfg = window.FT.config;
     setText("[data-footer-logo]", cfg.nav.logo);
-    setText("[data-footer-tagline]", footer.tagline);
-    setText("[data-footer-legal]", footer.legal);
+    setText("[data-footer-tagline]", cfg.footer.tagline);
+    setText("[data-footer-legal]", cfg.footer.legal);
     setText("[data-footer-email]", cfg.site.email);
-    setAttr("[data-footer-email-link]", "href", "mailto:" + cfg.site.email);
     setText("[data-footer-whatsapp]", cfg.site.whatsappDisplay);
-    setAttr(
-      "[data-footer-whatsapp-link]",
-      "href",
-      whatsappUrl("Hello Fasttrack Registry!")
-    );
-
-    var linksContainer = el("[data-footer-links]");
-    if (linksContainer) {
-      var html = "";
-      footer.links.forEach(function (link) {
-        html +=
-          '<li><a href="' + link.href + '">' + link.label + "</a></li>";
-      });
-      linksContainer.innerHTML = html;
+    setAttr("[data-footer-email-link]", "href", "mailto:" + cfg.site.email);
+    setAttr("[data-footer-whatsapp-link]", "href", whatsappUrl("Hello Fasttrack Registry!"));
+    var lc = el("[data-footer-links]");
+    if (lc) {
+      lc.innerHTML = cfg.footer.links.map(function (l) {
+        return '<li><a href="' + l.href + '">' + l.label + "</a></li>";
+      }).join("");
     }
   }
 
-  // ============================================================
-  // INDEX PAGE
-  // ============================================================
+  // ── Index ─────────────────────────────────────────────────
   function buildIndex() {
-    var h = cfg.hero;
-    var s = cfg.services;
-    var hw = cfg.howItWorks;
-    var p = cfg.pricing;
-    var f = cfg.faq;
-    var t = cfg.trust;
-    var b = cfg.ctaBanner;
+    var cfg = window.FT.config;
+    var h = cfg.hero, s = cfg.services, hw = cfg.howItWorks,
+        p = cfg.pricing, f = cfg.faq, t = cfg.trust, b = cfg.ctaBanner;
 
     // Hero
     setText("[data-hero-eyebrow]", h.eyebrow);
@@ -155,300 +89,174 @@
     setText("[data-hero-accent]", h.headlineAccent);
     setText("[data-hero-sub]", h.subheadline);
     setText("[data-hero-trust]", h.trustBadge);
-    var primaryCta = el("[data-hero-cta-primary]");
-    if (primaryCta) {
-      primaryCta.textContent = h.cta_primary.label;
-      primaryCta.setAttribute("href", h.cta_primary.href);
-    }
-    var secondaryCta = el("[data-hero-cta-secondary]");
-    if (secondaryCta) {
-      secondaryCta.textContent = h.cta_secondary.label;
-      secondaryCta.setAttribute("href", h.cta_secondary.href);
-    }
+    var pc = el("[data-hero-cta-primary]");
+    if (pc) { pc.textContent = h.cta_primary.label; pc.setAttribute("href", h.cta_primary.href); }
+    var sc = el("[data-hero-cta-secondary]");
+    if (sc) { sc.textContent = h.cta_secondary.label; sc.setAttribute("href", h.cta_secondary.href); }
+
+    // Trust stats
+    setText("[data-trust-label]", t.sectionLabel);
+    setText("[data-trust-heading]", t.heading);
+    var sg = el("[data-trust-stats]");
+    if (sg) sg.innerHTML = t.stats.map(function (st) {
+      return '<div class="stat"><div class="stat__value">' + st.value + '</div><div class="stat__label">' + st.label + '</div></div>';
+    }).join("");
 
     // Services
     setText("[data-services-label]", s.sectionLabel);
     setText("[data-services-heading]", s.heading);
     setText("[data-services-sub]", s.subheading);
-    var servicesGrid = el("[data-services-grid]");
-    if (servicesGrid) {
-      servicesGrid.innerHTML = s.items
-        .map(function (item) {
-          return (
-            '<article class="service-card' +
-            (item.badge ? " service-card--featured" : "") +
-            '">' +
-            (item.badge
-              ? '<span class="badge">' + item.badge + "</span>"
-              : "") +
-            '<div class="service-card__icon">' +
-            item.icon +
-            "</div>" +
-            '<h3 class="service-card__title">' +
-            item.title +
-            "</h3>" +
-            '<p class="service-card__desc">' +
-            item.description +
-            "</p>" +
-            "</article>"
-          );
-        })
-        .join("");
-    }
+    var sg2 = el("[data-services-grid]");
+    if (sg2) sg2.innerHTML = s.items.map(function (item) {
+      return '<article class="service-card' + (item.badge ? " service-card--featured" : "") + '">' +
+        (item.badge ? '<span class="badge">' + item.badge + "</span>" : "") +
+        '<div class="service-card__icon">' + item.icon + "</div>" +
+        '<h3 class="service-card__title">' + item.title + "</h3>" +
+        '<p class="service-card__desc">' + item.description + "</p></article>";
+    }).join("");
 
-    // How It Works
+    // How it works
     setText("[data-how-label]", hw.sectionLabel);
     setText("[data-how-heading]", hw.heading);
     setText("[data-how-sub]", hw.subheading);
-    var stepsContainer = el("[data-how-steps]");
-    if (stepsContainer) {
-      stepsContainer.innerHTML = hw.steps
-        .map(function (step) {
-          return (
-            '<div class="step">' +
-            '<div class="step__number">' +
-            step.number +
-            "</div>" +
-            '<div class="step__content">' +
-            '<h3 class="step__title">' +
-            step.title +
-            "</h3>" +
-            '<p class="step__desc">' +
-            step.description +
-            "</p>" +
-            "</div>" +
-            "</div>"
-          );
-        })
-        .join("");
-    }
-
-    // Trust stats
-    setText("[data-trust-label]", t.sectionLabel);
-    setText("[data-trust-heading]", t.heading);
-    var statsContainer = el("[data-trust-stats]");
-    if (statsContainer) {
-      statsContainer.innerHTML = t.stats
-        .map(function (stat) {
-          return (
-            '<div class="stat">' +
-            '<div class="stat__value">' +
-            stat.value +
-            "</div>" +
-            '<div class="stat__label">' +
-            stat.label +
-            "</div>" +
-            "</div>"
-          );
-        })
-        .join("");
-    }
+    var hc = el("[data-how-steps]");
+    if (hc) hc.innerHTML = hw.steps.map(function (step) {
+      return '<div class="step"><div class="step__number">' + step.number + '</div>' +
+        '<div class="step__content"><h3 class="step__title">' + step.title + '</h3>' +
+        '<p class="step__desc">' + step.description + '</p></div></div>';
+    }).join("");
 
     // Pricing
     setText("[data-pricing-label]", p.sectionLabel);
     setText("[data-pricing-heading]", p.heading);
     setText("[data-pricing-sub]", p.subheading);
     setText("[data-pricing-note]", p.note);
-    var pricingGrid = el("[data-pricing-grid]");
-    if (pricingGrid) {
-      pricingGrid.innerHTML = p.plans
-        .map(function (plan) {
-          var features = plan.features
-            .map(function (f) {
-              return '<li><span class="check">✓</span>' + f + "</li>";
-            })
-            .join("");
-          return (
-            '<div class="pricing-card' +
-            (plan.highlighted ? " pricing-card--featured" : "") +
-            '">' +
-            (plan.badge
-              ? '<span class="badge">' + plan.badge + "</span>"
-              : "") +
-            '<div class="pricing-card__name">' +
-            plan.name +
-            "</div>" +
-            '<div class="pricing-card__price">' +
-            plan.price +
-            "</div>" +
-            '<div class="pricing-card__period">' +
-            plan.period +
-            "</div>" +
-            '<p class="pricing-card__desc">' +
-            plan.description +
-            "</p>" +
-            '<ul class="pricing-card__features">' +
-            features +
-            "</ul>" +
-            '<a href="./booking.html" class="btn' +
-            (plan.highlighted ? " btn--primary" : " btn--outline") +
-            '">' +
-            plan.cta +
-            "</a>" +
-            "</div>"
-          );
-        })
-        .join("");
-    }
+    var pg = el("[data-pricing-grid]");
+    if (pg) pg.innerHTML = p.plans.map(function (plan) {
+      var feats = plan.features.map(function (f) {
+        return '<li><span class="check">✓</span>' + f + "</li>";
+      }).join("");
+      return '<div class="pricing-card' + (plan.highlighted ? " pricing-card--featured" : "") + '">' +
+        (plan.badge ? '<span class="badge">' + plan.badge + "</span>" : "") +
+        '<div class="pricing-card__name">' + plan.name + "</div>" +
+        '<div class="pricing-card__price">' + plan.price + "</div>" +
+        '<div class="pricing-card__period">' + plan.period + "</div>" +
+        '<p class="pricing-card__desc">' + plan.description + "</p>" +
+        '<ul class="pricing-card__features">' + feats + "</ul>" +
+        '<a href="./booking.html" class="btn ' + (plan.highlighted ? "btn--primary" : "btn--outline") + '">' + plan.cta + "</a></div>";
+    }).join("");
 
     // FAQ
     setText("[data-faq-label]", f.sectionLabel);
     setText("[data-faq-heading]", f.heading);
     setText("[data-faq-sub]", f.subheading);
-    var faqContainer = el("[data-faq-items]");
-    if (faqContainer) {
-      faqContainer.innerHTML = f.items
-        .map(function (item, i) {
-          return (
-            '<details class="faq-item" ' +
-            (i === 0 ? "open" : "") +
-            ">" +
-            '<summary class="faq-item__q">' +
-            item.q +
-            '<span class="faq-item__icon" aria-hidden="true"></span>' +
-            "</summary>" +
-            '<div class="faq-item__a"><p>' +
-            item.a +
-            "</p></div>" +
-            "</details>"
-          );
-        })
-        .join("");
-    }
+    var fc = el("[data-faq-items]");
+    if (fc) fc.innerHTML = f.items.map(function (item, i) {
+      return '<details class="faq-item"' + (i === 0 ? " open" : "") + ">" +
+        '<summary class="faq-item__q">' + item.q + '<span class="faq-item__icon" aria-hidden="true"></span></summary>' +
+        '<div class="faq-item__a"><p>' + item.a + "</p></div></details>";
+    }).join("");
 
     // CTA Banner
     setText("[data-cta-heading]", b.heading);
     setText("[data-cta-sub]", b.subheading);
-    var ctaBtn = el("[data-cta-btn]");
-    if (ctaBtn) {
-      ctaBtn.textContent = b.cta.label;
-      ctaBtn.setAttribute("href", b.cta.href);
-    }
+    var cb = el("[data-cta-btn]");
+    if (cb) { cb.textContent = b.cta.label; cb.setAttribute("href", b.cta.href); }
   }
 
-  // ============================================================
-  // BOOKING PAGE
-  // ============================================================
+  // ── Booking ───────────────────────────────────────────────
   function buildBooking() {
+    var cfg = window.FT.config;
     var bk = cfg.booking;
     setText("[data-booking-eyebrow]", bk.eyebrow);
     setText("[data-booking-heading]", bk.heading);
     setText("[data-booking-sub]", bk.subheading);
-
-    // Build contact option cards
-    var optionsContainer = el("[data-booking-options]");
-    if (optionsContainer) {
-      optionsContainer.innerHTML = bk.options
-        .map(function (opt) {
-          var url =
-            opt.type === "whatsapp"
-              ? whatsappUrl(bk.whatsappCta.message)
-              : mailtoUrl(bk.emailCta.subject, bk.emailCta.body);
-          var target = opt.type === "whatsapp" ? ' target="_blank" rel="noopener"' : "";
-          return (
-            '<div class="contact-card">' +
-            '<div class="contact-card__icon">' +
-            opt.icon +
-            "</div>" +
-            '<h3 class="contact-card__title">' +
-            opt.title +
-            "</h3>" +
-            '<p class="contact-card__desc">' +
-            opt.description +
-            "</p>" +
-            '<a href="' +
-            url +
-            '" class="btn btn--primary"' +
-            target +
-            ">" +
-            opt.cta +
-            "</a>" +
-            "</div>"
-          );
-        })
-        .join("");
-    }
-
-    // Reassurances
-    var reassContainer = el("[data-booking-reassurances]");
-    if (reassContainer) {
-      reassContainer.innerHTML = bk.reassurances
-        .map(function (r) {
-          return '<li><span class="check">✓</span>' + r + "</li>";
-        })
-        .join("");
-    }
+    var oc = el("[data-booking-options]");
+    if (oc) oc.innerHTML = bk.options.map(function (opt) {
+      var url = opt.type === "whatsapp"
+        ? whatsappUrl(bk.whatsappCta.message)
+        : mailtoUrl(bk.emailCta.subject, bk.emailCta.body);
+      var target = opt.type === "whatsapp" ? ' target="_blank" rel="noopener"' : "";
+      return '<div class="contact-card">' +
+        '<div class="contact-card__icon">' + opt.icon + "</div>" +
+        '<h3 class="contact-card__title">' + opt.title + "</h3>" +
+        '<p class="contact-card__desc">' + opt.description + "</p>" +
+        '<a href="' + url + '" class="btn btn--primary"' + target + ">" + opt.cta + "</a></div>";
+    }).join("");
+    var rc = el("[data-booking-reassurances]");
+    if (rc) rc.innerHTML = bk.reassurances.map(function (r) {
+      return '<li><span class="check">✓</span>' + r + "</li>";
+    }).join("");
   }
 
-  // ============================================================
-  // MAINTENANCE PAGE
-  // ============================================================
+  // ── Maintenance ───────────────────────────────────────────
   function buildMaintenance() {
+    var cfg = window.FT.config;
     var m = cfg.maintenance;
     setText("[data-maint-heading]", m.heading);
     setText("[data-maint-sub]", m.subheading);
     setText("[data-maint-eta]", m.eta);
     setText("[data-maint-contact]", m.contact);
-    var waBtn = el("[data-maint-wa]");
-    if (waBtn) {
-      waBtn.textContent = m.whatsappCta;
-      waBtn.setAttribute(
-        "href",
-        whatsappUrl("Hello Fasttrack Registry! I saw your site is under maintenance.")
-      );
+    var wa = el("[data-maint-wa]");
+    if (wa) {
+      wa.textContent = m.whatsappCta;
+      wa.setAttribute("href", whatsappUrl("Hello Fasttrack Registry! I saw your site is under maintenance."));
     }
     setText("[data-maint-logo]", cfg.nav.logo);
   }
 
-  // ============================================================
-  // SCROLL ANIMATIONS
-  // ============================================================
+  // ── Scroll reveal ─────────────────────────────────────────
   function initScrollReveal() {
     if (!("IntersectionObserver" in window)) return;
-    var observer = new IntersectionObserver(
-      function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.1, rootMargin: "0px 0px -40px 0px" }
-    );
-    els("[data-reveal]").forEach(function (el) {
-      observer.observe(el);
-    });
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add("is-visible"); obs.unobserve(e.target); }
+      });
+    }, { threshold: 0.1, rootMargin: "0px 0px -40px 0px" });
+    els("[data-reveal]").forEach(function (el) { obs.observe(el); });
   }
 
-  // ============================================================
-  // SMOOTH SCROLL FOR ANCHOR LINKS
-  // ============================================================
+  // ── Smooth scroll ─────────────────────────────────────────
   function initSmoothScroll() {
     els('a[href^="#"]').forEach(function (a) {
       a.addEventListener("click", function (e) {
-        var target = document.getElementById(a.getAttribute("href").slice(1));
-        if (!target) return;
+        var t = document.getElementById(a.getAttribute("href").slice(1));
+        if (!t) return;
         e.preventDefault();
-        target.scrollIntoView({ behavior: "smooth", block: "start" });
+        t.scrollIntoView({ behavior: "smooth", block: "start" });
       });
     });
   }
 
-  // ============================================================
-  // ENTRY POINT
-  // ============================================================
+  // ── Entry point ───────────────────────────────────────────
   document.addEventListener("DOMContentLoaded", function () {
     var page = document.body.dataset.page;
 
-    buildNav();
-    buildFooter();
+    // Maintenance page loads config itself for content only
+    if (page === "maintenance") {
+      window.FT.loadConfig().then(function () {
+        buildMaintenance();
+      }).catch(function () {});
+      return;
+    }
 
-    if (page === "index") buildIndex();
-    if (page === "booking") buildBooking();
-    if (page === "maintenance") buildMaintenance();
+    // Config already loaded by router.js for other pages
+    // But wait for it in case of timing edge cases
+    function init() {
+      buildNav();
+      buildFooter();
+      if (page === "index")   buildIndex();
+      if (page === "booking") buildBooking();
+      initScrollReveal();
+      initSmoothScroll();
+    }
 
-    initScrollReveal();
-    initSmoothScroll();
+    if (window.FT.config) {
+      init();
+    } else {
+      window.FT.loadConfig().then(init).catch(function () {
+        document.documentElement.style.visibility = "visible";
+      });
+    }
   });
 })();
