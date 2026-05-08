@@ -883,3 +883,25 @@ footer {
 }
 a:focus:not(:focus-visible),
 button:focus:not(:focus-visible) { outline: none; }
+
+/* ── Service card as link ─────────────────────────────────── */
+a.service-card {
+  display: block;
+  text-decoration: none;
+  cursor: pointer;
+}
+a.service-card:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 3px;
+}
+.service-card__cta {
+  display: inline-block;
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--gold);
+  transition: gap 0.2s;
+}
+a.service-card:hover .service-card__cta {
+  letter-spacing: 0.03em;
+}
