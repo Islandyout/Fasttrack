@@ -108,11 +108,11 @@
     setText("[data-services-sub]", s.subheading);
     var sg2 = el("[data-services-grid]");
     if (sg2) sg2.innerHTML = s.items.map(function (item) {
-      return '<article class="service-card' + (item.badge ? " service-card--featured" : "") + '">' +
+      return '<a href="#pricing" class="service-card' + (item.badge ? " service-card--featured" : "") + '">' +
         (item.badge ? '<span class="badge">' + item.badge + "</span>" : "") +
         '<div class="service-card__icon">' + item.icon + "</div>" +
         '<h3 class="service-card__title">' + item.title + "</h3>" +
-        '<p class="service-card__desc">' + item.description + "</p></article>";
+        '<p class="service-card__desc">' + item.description + '</p><span class="service-card__cta">View Pricing →</span></a>';
     }).join("");
 
     // How it works
