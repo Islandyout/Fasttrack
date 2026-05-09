@@ -229,42 +229,100 @@
   }
 
 
-  // ── Apply custom colours from config ──────────────────────
   function applyColours(cfg) {
     if (!cfg._colours) return;
     var c = cfg._colours;
     var root = document.documentElement;
-    if (c.navy)      root.style.setProperty("--navy",      c.navy);
-    if (c.navy)      root.style.setProperty("--navy-deep", shadeColor(c.navy, -20));
-    if (c.gold)      root.style.setProperty("--gold",      c.gold);
-    if (c.gold)      root.style.setProperty("--gold-light",shadeColor(c.gold, 20));
-    if (c.cream)     root.style.setProperty("--cream",     c.cream);
-    if (c.heading)   root.style.setProperty("--text-heading", c.heading);
-    if (c.body)      root.style.setProperty("--text-body", c.body);
-    if (c.muted)     root.style.setProperty("--text-muted",c.muted);
-    // Section backgrounds via inline style injection
-    if (c.heroBg) {
-      var hero = document.querySelector(".hero");
-      if (hero) hero.style.background = c.heroBg;
+
+    // CSS variables (used site-wide)
+    if (c.gold)  root.style.setProperty("--gold",  c.gold);
+    if (c.navy)  root.style.setProperty("--navy",  c.navy);
+    if (c.cream) root.style.setProperty("--cream", c.cream);
+    if (c.btnPrimaryBg)   root.style.setProperty("--btn-primary-bg",   c.btnPrimaryBg);
+    if (c.btnPrimaryText) root.style.setProperty("--btn-primary-text", c.btnPrimaryText);
+    if (c.sectionLabel)   root.style.setProperty("--section-label-color", c.sectionLabel);
+    if (c.check)          root.style.setProperty("--check-color", c.check);
+    if (c.cardBg)         root.style.setProperty("--card-bg",     c.cardBg);
+    if (c.bodyText)       root.style.setProperty("--text-body",   c.bodyText);
+    if (c.sectionSub)     root.style.setProperty("--text-muted",  c.sectionSub);
+
+    // Backgrounds
+    function bg(sel, val) { var el = document.querySelector(sel); if (el && val) el.style.background = val; }
+    bg(".hero",              c.heroBg);
+    bg(".services-section",  c.servicesBg);
+    bg(".how-section",       c.howBg);
+    bg(".trust-section",     c.trustBg);
+    bg(".pricing-section",   c.pricingBg);
+    bg(".faq-section",       c.faqBg);
+    bg(".cta-banner",        c.ctaBg);
+    bg("footer",             c.footerBg);
+
+    // Nav bg (scrolled state)
+    if (c.navBg) {
+      var style = document.getElementById("ft-nav-style");
+      if (!style) { style = document.createElement("style"); style.id = "ft-nav-style"; document.head.appendChild(style); }
+      style.textContent = "[data-nav].is-scrolled,[data-nav]{background:" + c.navBg + " !important;}";
     }
-    if (c.sectionBg) {
-      document.querySelectorAll(".services-section,.pricing-section").forEach(function(el){
-        el.style.background = c.sectionBg;
+
+    // Hero text
+    function tc(sel, val) { document.querySelectorAll(sel).forEach(function(el){ if (val) el.style.color = val; }); }
+    tc("[data-hero-eyebrow]",        c.heroEyebrow);
+    tc("[data-hero-headline]",       c.heroHeadline);
+    tc("[data-hero-accent]",         c.heroAccent);
+    tc("[data-hero-sub]",            c.heroSub);
+    tc("[data-hero-trust]",          c.heroTrust);
+
+    // Section headings & text
+    tc("[data-services-label],[data-how-label],[data-pricing-label],[data-faq-label],[data-trust-label],[data-cta-heading],.section-label", c.sectionLabel);
+    tc("h2,h3",                      c.sectionHeading);
+    tc("[data-services-sub],[data-how-sub],[data-pricing-sub],[data-faq-sub]", c.sectionSub);
+
+    // Trust stats
+    tc(".stat__value",  c.statValue);
+    tc(".stat__label",  c.statLabel);
+    tc("[data-trust-heading]", c.trustHeading);
+
+    // Pricing featured card
+    if (c.pricingFeaturedBg || c.pricingFeaturedText) {
+      document.querySelectorAll(".pricing-card--featured").forEach(function(el){
+        if (c.pricingFeaturedBg)   el.style.background = c.pricingFeaturedBg;
+        if (c.pricingFeaturedText) el.style.color       = c.pricingFeaturedText;
       });
     }
-    if (c.ctaBg) {
-      var cta = document.querySelector(".cta-banner");
-      if (cta) cta.style.background = c.ctaBg;
+    tc(".pricing-card__price", c.priceNumber);
+    tc(".check", c.check);
+
+    // CTA banner
+    tc("[data-cta-heading]", c.ctaHeading);
+    tc("[data-cta-sub]",     c.ctaSub);
+
+    // Footer
+    tc("footer [data-footer-tagline],footer [data-footer-email],footer [data-footer-whatsapp]", c.footerText);
+    tc("[data-footer-legal]", c.footerLegal);
+    if (c.footerLinkHover) {
+      var fstyle = document.getElementById("ft-footer-style");
+      if (!fstyle) { fstyle = document.createElement("style"); fstyle.id = "ft-footer-style"; document.head.appendChild(fstyle); }
+      fstyle.textContent = ".footer__links a:hover,[data-footer-whatsapp-link]:hover,[data-footer-email-link]:hover{color:" + c.footerLinkHover + " !important;}";
     }
-    // h1,h2,h3 colour
-    if (c.heading) {
-      document.querySelectorAll("h1,h2,h3,h4").forEach(function(el){
-        el.style.color = c.heading;
-      });
+
+    // Buttons
+    if (c.btnPrimaryBg || c.btnPrimaryText) {
+      var bstyle = document.getElementById("ft-btn-style");
+      if (!bstyle) { bstyle = document.createElement("style"); bstyle.id = "ft-btn-style"; document.head.appendChild(bstyle); }
+      bstyle.textContent =
+        ".btn--primary{background:" + (c.btnPrimaryBg||"#c9973a") + " !important;color:" + (c.btnPrimaryText||"#08152a") + " !important;border-color:" + (c.btnPrimaryBg||"#c9973a") + " !important;}" +
+        ".btn--ghost{border-color:" + (c.btnSecondaryBorder||"rgba(255,255,255,0.4)") + " !important;color:" + (c.btnSecondaryText||"#ffffff") + " !important;}";
+    }
+
+    // Cards
+    if (c.cardBg || c.cardBorder) {
+      var cstyle = document.getElementById("ft-card-style");
+      if (!cstyle) { cstyle = document.createElement("style"); cstyle.id = "ft-card-style"; document.head.appendChild(cstyle); }
+      cstyle.textContent = ".service-card,.pricing-card:not(.pricing-card--featured),.contact-card{background:" + (c.cardBg||"#ffffff") + " !important;border-color:" + (c.cardBorder||"#e8dcc8") + " !important;}";
     }
   }
 
-  // ── Apply custom logo ──────────────────────────────────────
+    // ── Apply custom logo ──────────────────────────────────────
   function applyLogo(cfg) {
     if (!cfg._logo) return;
     document.querySelectorAll(".nav__logo-img").forEach(function(img){
