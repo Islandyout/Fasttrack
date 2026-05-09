@@ -116,6 +116,23 @@
     /* Loading */
     .loading{display:flex;align-items:center;justify-content:center;min-height:200px;color:var(--muted);font-size:0.9rem;}
 
+
+    /* Colour panel */
+    .colour-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;}
+    .colour-field label{display:block;font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:0.5rem;font-weight:600;}
+    .swatch-row{display:flex;align-items:center;gap:0.75rem;}
+    .swatch-row input[type="color"]{width:44px;height:44px;border:2px solid rgba(255,255,255,0.1);border-radius:8px;cursor:pointer;padding:2px;background:#1f2937;}
+    .swatch-row input[type="color"]:hover{border-color:var(--gold);}
+    .colour-val{font-size:0.82rem;color:#9ca3af;font-family:monospace;}
+    @media(max-width:640px){.colour-grid{grid-template-columns:1fr 1fr;}}
+
+    /* Logo upload */
+    .logo-upload-area{border:2px dashed rgba(201,151,58,0.3);border-radius:12px;padding:2.5rem;text-align:center;cursor:pointer;transition:border-color 0.2s,background 0.2s;}
+    .logo-upload-area:hover,.logo-upload-area.drag-over{border-color:var(--gold);background:rgba(201,151,58,0.04);}
+    .upload-icon{font-size:2.5rem;margin-bottom:0.75rem;}
+    .upload-label{font-size:0.95rem;color:#d1d5db;margin-bottom:0.25rem;}
+    .upload-sub{font-size:0.8rem;color:var(--muted);}
+
     @media(max-width:768px){
       .sidebar{display:none;}
       .grid-2{grid-template-columns:1fr;}
@@ -164,6 +181,8 @@
       <div class="sidebar-item" data-panel="cta">📣 CTA Banner</div>
       <div class="sidebar-item" data-panel="booking">📅 Booking Page</div>
       <div class="sidebar-label">Style</div>
+      <div class="sidebar-item" data-panel="colours">🎨 Colours</div>
+      <div class="sidebar-item" data-panel="logo">🖼️ Logo</div>
       <div class="sidebar-item" data-panel="footer">🔗 Footer</div>
     </aside>
 
@@ -344,6 +363,134 @@
         </div>
       </div>
 
+
+      <!-- COLOURS -->
+      <div class="panel" id="panel-colours">
+        <h2 class="panel-title">Colours</h2>
+        <p class="panel-desc">Changes apply site-wide instantly on save. Click a swatch to change it.</p>
+        <div class="card">
+          <h3>Brand Colours</h3>
+          <div class="colour-grid">
+            <div class="colour-field">
+              <label>Navy (primary bg)</label>
+              <div class="swatch-row">
+                <input type="color" id="f-color-navy" value="#0f1f3d"/>
+                <span class="colour-val" id="f-color-navy-val">#0f1f3d</span>
+              </div>
+            </div>
+            <div class="colour-field">
+              <label>Gold (accent)</label>
+              <div class="swatch-row">
+                <input type="color" id="f-color-gold" value="#c9973a"/>
+                <span class="colour-val" id="f-color-gold-val">#c9973a</span>
+              </div>
+            </div>
+            <div class="colour-field">
+              <label>Cream (light bg)</label>
+              <div class="swatch-row">
+                <input type="color" id="f-color-cream" value="#f8f5ef"/>
+                <span class="colour-val" id="f-color-cream-val">#f8f5ef</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Font Colours</h3>
+          <div class="colour-grid">
+            <div class="colour-field">
+              <label>Heading colour</label>
+              <div class="swatch-row">
+                <input type="color" id="f-color-heading" value="#0f1f3d"/>
+                <span class="colour-val" id="f-color-heading-val">#0f1f3d</span>
+              </div>
+            </div>
+            <div class="colour-field">
+              <label>Body text</label>
+              <div class="swatch-row">
+                <input type="color" id="f-color-body" value="#2c3e50"/>
+                <span class="colour-val" id="f-color-body-val">#2c3e50</span>
+              </div>
+            </div>
+            <div class="colour-field">
+              <label>Muted / subtext</label>
+              <div class="swatch-row">
+                <input type="color" id="f-color-muted" value="#6b7280"/>
+                <span class="colour-val" id="f-color-muted-val">#6b7280</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Section Backgrounds</h3>
+          <div class="colour-grid">
+            <div class="colour-field">
+              <label>Hero bg</label>
+              <div class="swatch-row">
+                <input type="color" id="f-color-hero-bg" value="#08152a"/>
+                <span class="colour-val" id="f-color-hero-bg-val">#08152a</span>
+              </div>
+            </div>
+            <div class="colour-field">
+              <label>Services / Pricing bg</label>
+              <div class="swatch-row">
+                <input type="color" id="f-color-section-bg" value="#f8f5ef"/>
+                <span class="colour-val" id="f-color-section-bg-val">#f8f5ef</span>
+              </div>
+            </div>
+            <div class="colour-field">
+              <label>CTA Banner bg</label>
+              <div class="swatch-row">
+                <input type="color" id="f-color-cta-bg" value="#0f1f3d"/>
+                <span class="colour-val" id="f-color-cta-bg-val">#0f1f3d</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Live Preview</h3>
+          <div id="colour-preview" style="border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);">
+            <div id="prev-hero" style="padding:1.5rem 2rem;">
+              <div id="prev-eyebrow" style="font-size:0.75rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.5rem;">Jamaica Business Registration</div>
+              <div id="prev-headline" style="font-size:1.8rem;font-weight:700;font-family:Georgia,serif;line-height:1.2;margin-bottom:0.25rem;">Register Your Business.</div>
+              <div id="prev-accent" style="font-size:1.8rem;font-weight:700;font-style:italic;font-family:Georgia,serif;">Launch Your Dream.</div>
+            </div>
+            <div id="prev-section" style="padding:1.5rem 2rem;">
+              <div id="prev-heading" style="font-size:1.1rem;font-weight:700;font-family:Georgia,serif;margin-bottom:0.4rem;">Our Services</div>
+              <div id="prev-body" style="font-size:0.9rem;">We handle your registration paperwork.</div>
+              <div id="prev-muted" style="font-size:0.8rem;margin-top:0.25rem;">Fast, correctly, and without the stress.</div>
+            </div>
+            <div id="prev-cta" style="padding:1.5rem 2rem;text-align:center;">
+              <div style="font-size:1rem;font-weight:700;font-family:Georgia,serif;" id="prev-cta-text">Ready to Make It Official?</div>
+              <div id="prev-btn" style="display:inline-block;margin-top:0.75rem;padding:0.6rem 1.5rem;border-radius:6px;font-weight:700;font-size:0.85rem;">Get Started</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LOGO -->
+      <div class="panel" id="panel-logo">
+        <h2 class="panel-title">Logo</h2>
+        <p class="panel-desc">Replace the default SVG seal with your own image. PNG, JPG, SVG or WebP. Recommended size: 200×200px square.</p>
+        <div class="card">
+          <h3>Current Logo</h3>
+          <div style="display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;margin-bottom:1.5rem;">
+            <img id="logo-preview" src="./assets/logo.svg" alt="Current logo" style="width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,0.05);padding:4px;"/>
+            <div>
+              <p style="font-size:0.85rem;color:#9ca3af;margin-bottom:0.5rem;">Shown in the navbar on all pages.</p>
+              <button class="btn-sm btn-preview" id="reset-logo-btn" style="font-size:0.8rem;padding:0.4rem 0.9rem;">Reset to Default SVG</button>
+            </div>
+          </div>
+          <div class="logo-upload-area" id="logo-drop-zone">
+            <input type="file" id="logo-file-input" accept="image/*" style="display:none;"/>
+            <div class="upload-icon">🖼️</div>
+            <p class="upload-label">Click to upload or drag & drop</p>
+            <p class="upload-sub">PNG, JPG, SVG, WebP — max 2MB</p>
+            <button class="btn-sm btn-save" id="logo-browse-btn" style="margin-top:0.75rem;">Browse File</button>
+          </div>
+          <div id="logo-error" style="color:#f87171;font-size:0.83rem;margin-top:0.75rem;display:none;"></div>
+        </div>
+      </div>
+
       <!-- FOOTER -->
       <div class="panel" id="panel-footer">
         <h2 class="panel-title">Footer</h2>
@@ -427,6 +574,8 @@ function loadFromSupabase() {
     document.getElementById("loading-msg").style.display = "none";
     document.querySelectorAll(".panel").forEach(function(p){ p.style.display = ""; });
     populateFields();
+    populateColours();
+    populateLogo();
     buildDynamic();
     updateMaintPill();
   }).catch(function(err){
@@ -700,6 +849,24 @@ function collect() {
   state.booking.reassurances             = g("f-reassurances").split("\n").filter(Boolean);
   state.footer.tagline = g("f-footer-tagline");
   state.footer.legal   = g("f-footer-legal");
+
+  // Colours
+  state._colours = {
+    navy:      g("f-color-navy")      || "#0f1f3d",
+    gold:      g("f-color-gold")      || "#c9973a",
+    cream:     g("f-color-cream")     || "#f8f5ef",
+    heading:   g("f-color-heading")   || "#0f1f3d",
+    body:      g("f-color-body")      || "#2c3e50",
+    muted:     g("f-color-muted")     || "#6b7280",
+    heroBg:    g("f-color-hero-bg")   || "#08152a",
+    sectionBg: g("f-color-section-bg")|| "#f8f5ef",
+    ctaBg:     g("f-color-cta-bg")    || "#0f1f3d"
+  };
+  // Logo — only update if a new one was uploaded
+  if (window._pendingLogoBase64) {
+    state._logo = window._pendingLogoBase64;
+  }
+
 }
 
 // ── Save to Supabase ───────────────────────────────────────
@@ -738,6 +905,133 @@ function updateMaintPill() {
   pill.className   = "maint-pill " + (on ? "on" : "off");
 }
 document.getElementById("f-maintenance").addEventListener("change", updateMaintPill);
+
+
+// ── Populate colours ───────────────────────────────────────
+function populateColours() {
+  var c = state._colours || {};
+  function setCol(id, def) {
+    var el = document.getElementById(id);
+    var val = c[id.replace("f-color-","").replace(/-./g, function(m){ return m[1].toUpperCase(); })] || def;
+    // map field ids to state keys
+    var map = {
+      "f-color-navy": c.navy||"#0f1f3d",
+      "f-color-gold": c.gold||"#c9973a",
+      "f-color-cream": c.cream||"#f8f5ef",
+      "f-color-heading": c.heading||"#0f1f3d",
+      "f-color-body": c.body||"#2c3e50",
+      "f-color-muted": c.muted||"#6b7280",
+      "f-color-hero-bg": c.heroBg||"#08152a",
+      "f-color-section-bg": c.sectionBg||"#f8f5ef",
+      "f-color-cta-bg": c.ctaBg||"#0f1f3d"
+    };
+    if (el) { el.value = map[id]; document.getElementById(id+"-val").textContent = map[id]; }
+  }
+  ["f-color-navy","f-color-gold","f-color-cream","f-color-heading","f-color-body","f-color-muted","f-color-hero-bg","f-color-section-bg","f-color-cta-bg"].forEach(function(id){ setCol(id); });
+  updatePreview();
+}
+
+function updatePreview() {
+  var navy    = document.getElementById("f-color-navy").value;
+  var gold    = document.getElementById("f-color-gold").value;
+  var cream   = document.getElementById("f-color-cream").value;
+  var heading = document.getElementById("f-color-heading").value;
+  var body    = document.getElementById("f-color-body").value;
+  var muted   = document.getElementById("f-color-muted").value;
+  var heroBg  = document.getElementById("f-color-hero-bg").value;
+  var sectBg  = document.getElementById("f-color-section-bg").value;
+  var ctaBg   = document.getElementById("f-color-cta-bg").value;
+
+  var hero = document.getElementById("prev-hero");
+  if (hero) {
+    hero.style.background = heroBg;
+    document.getElementById("prev-eyebrow").style.color = gold;
+    document.getElementById("prev-headline").style.color = "#ffffff";
+    document.getElementById("prev-accent").style.color   = gold;
+  }
+  var sect = document.getElementById("prev-section");
+  if (sect) {
+    sect.style.background = sectBg;
+    document.getElementById("prev-heading").style.color = heading;
+    document.getElementById("prev-body").style.color    = body;
+    document.getElementById("prev-muted").style.color   = muted;
+  }
+  var cta = document.getElementById("prev-cta");
+  if (cta) {
+    cta.style.background = ctaBg;
+    document.getElementById("prev-cta-text").style.color = "#ffffff";
+    document.getElementById("prev-btn").style.background = gold;
+    document.getElementById("prev-btn").style.color      = navy;
+  }
+}
+
+// Bind colour pickers
+["f-color-navy","f-color-gold","f-color-cream","f-color-heading","f-color-body","f-color-muted","f-color-hero-bg","f-color-section-bg","f-color-cta-bg"].forEach(function(id){
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.addEventListener("input", function(){
+    document.getElementById(id+"-val").textContent = el.value;
+    updatePreview();
+  });
+});
+
+// ── Logo upload ────────────────────────────────────────────
+var dropZone   = document.getElementById("logo-drop-zone");
+var fileInput  = document.getElementById("logo-file-input");
+var logoPreview= document.getElementById("logo-preview");
+var logoErr    = document.getElementById("logo-error");
+window._pendingLogoBase64 = null;
+
+document.getElementById("logo-browse-btn").addEventListener("click", function(e){
+  e.stopPropagation();
+  fileInput.click();
+});
+dropZone.addEventListener("click", function(){ fileInput.click(); });
+dropZone.addEventListener("dragover", function(e){ e.preventDefault(); dropZone.classList.add("drag-over"); });
+dropZone.addEventListener("dragleave", function(){ dropZone.classList.remove("drag-over"); });
+dropZone.addEventListener("drop", function(e){
+  e.preventDefault(); dropZone.classList.remove("drag-over");
+  if (e.dataTransfer.files[0]) handleLogoFile(e.dataTransfer.files[0]);
+});
+fileInput.addEventListener("change", function(){
+  if (fileInput.files[0]) handleLogoFile(fileInput.files[0]);
+});
+
+function handleLogoFile(file) {
+  logoErr.style.display = "none";
+  if (file.size > 2 * 1024 * 1024) {
+    logoErr.textContent = "File too large. Max 2MB.";
+    logoErr.style.display = "block"; return;
+  }
+  if (!file.type.startsWith("image/")) {
+    logoErr.textContent = "Please upload an image file.";
+    logoErr.style.display = "block"; return;
+  }
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var b64 = e.target.result; // data:image/...;base64,...
+    window._pendingLogoBase64 = b64;
+    logoPreview.src = b64;
+    showToast("Logo ready — click Save to Live to apply");
+  };
+  reader.readAsDataURL(file);
+}
+
+document.getElementById("reset-logo-btn").addEventListener("click", function(){
+  window._pendingLogoBase64 = null;
+  state._logo = null;
+  logoPreview.src = "./assets/logo.svg";
+  showToast("Logo reset to default — click Save to Live");
+});
+
+// ── Populate logo preview ──────────────────────────────────
+function populateLogo() {
+  if (state._logo) {
+    logoPreview.src = state._logo;
+  } else {
+    logoPreview.src = "./assets/logo.svg";
+  }
+}
 
 // ── Toast ──────────────────────────────────────────────────
 function showToast(msg, type) {
