@@ -693,28 +693,29 @@
 
         <div class="card">
           <h3>Live Preview</h3>
+          <p style="font-size:0.8rem;color:#9ca3af;margin-bottom:1rem;">Updates instantly as you change colour pickers above.</p>
           <div id="colour-preview" style="border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);">
-            <div id="prev-hero" style="padding:1.5rem 2rem;">
-              <div id="prev-eyebrow" style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.4rem;">Jamaica Business Registration</div>
-              <div id="prev-headline" style="font-size:1.6rem;font-weight:700;font-family:Georgia,serif;line-height:1.2;margin-bottom:0.2rem;">Register Your Business.</div>
-              <div id="prev-accent" style="font-size:1.6rem;font-weight:700;font-style:italic;font-family:Georgia,serif;margin-bottom:0.75rem;">Launch Your Dream.</div>
+            <div id="prev-hero" style="padding:1.5rem 2rem;transition:background 0.15s;">
+              <div id="prev-eyebrow" style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.4rem;transition:color 0.15s;">Jamaica Business Registration</div>
+              <div id="prev-headline" style="font-size:1.6rem;font-weight:700;font-family:Georgia,serif;line-height:1.2;margin-bottom:0.2rem;transition:color 0.15s;">Register Your Business.</div>
+              <div id="prev-accent" style="font-size:1.6rem;font-weight:700;font-style:italic;font-family:Georgia,serif;margin-bottom:0.75rem;transition:color 0.15s;">Launch Your Dream.</div>
               <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
-                <div id="prev-btn-primary" style="padding:0.5rem 1.25rem;border-radius:6px;font-weight:700;font-size:0.82rem;display:inline-block;">Start Registration</div>
-                <div id="prev-btn-secondary" style="padding:0.5rem 1.25rem;border-radius:6px;font-weight:700;font-size:0.82rem;display:inline-block;border:2px solid;">See Services</div>
+                <div id="prev-btn-primary" style="padding:0.5rem 1.25rem;border-radius:6px;font-weight:700;font-size:0.82rem;display:inline-block;transition:background 0.15s,color 0.15s;">Start Registration</div>
+                <div id="prev-btn-secondary" style="padding:0.5rem 1.25rem;border-radius:6px;font-weight:700;font-size:0.82rem;display:inline-block;border:2px solid;transition:border-color 0.15s,color 0.15s;">See Services</div>
               </div>
             </div>
-            <div id="prev-section" style="padding:1.5rem 2rem;">
-              <div id="prev-section-label" style="font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.3rem;">What We Do</div>
-              <div id="prev-section-heading" style="font-size:1.2rem;font-weight:700;font-family:Georgia,serif;margin-bottom:0.3rem;">Everything You Need</div>
-              <div id="prev-section-sub" style="font-size:0.88rem;margin-bottom:0.75rem;">From sole traders to limited companies.</div>
-              <div id="prev-card" style="padding:1rem;border-radius:8px;border:1px solid;display:inline-block;font-size:0.85rem;">
-                <div id="prev-card-text">Company Registration</div>
+            <div id="prev-section" style="padding:1.5rem 2rem;transition:background 0.15s;">
+              <div id="prev-section-label" style="font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.3rem;transition:color 0.15s;">What We Do</div>
+              <div id="prev-section-heading" style="font-size:1.2rem;font-weight:700;font-family:Georgia,serif;margin-bottom:0.3rem;transition:color 0.15s;">Everything You Need</div>
+              <div id="prev-section-sub" style="font-size:0.88rem;margin-bottom:0.75rem;transition:color 0.15s;">From sole traders to limited companies.</div>
+              <div id="prev-card" style="padding:1rem;border-radius:8px;border:1px solid;display:inline-block;font-size:0.85rem;transition:background 0.15s,border-color 0.15s;">
+                <div id="prev-card-text" style="transition:color 0.15s;">Company Registration</div>
               </div>
             </div>
-            <div id="prev-cta-band" style="padding:1.5rem 2rem;text-align:center;">
-              <div id="prev-cta-heading" style="font-size:1.1rem;font-weight:700;font-family:Georgia,serif;margin-bottom:0.25rem;">Ready to Make It Official?</div>
-              <div id="prev-cta-sub" style="font-size:0.85rem;margin-bottom:0.75rem;">Join hundreds of Jamaican entrepreneurs.</div>
-              <div id="prev-cta-btn" style="display:inline-block;padding:0.5rem 1.25rem;border-radius:6px;font-weight:700;font-size:0.82rem;">Book Free Consultation</div>
+            <div id="prev-cta-band" style="padding:1.5rem 2rem;text-align:center;transition:background 0.15s;">
+              <div id="prev-cta-heading" style="font-size:1.1rem;font-weight:700;font-family:Georgia,serif;margin-bottom:0.25rem;transition:color 0.15s;">Ready to Make It Official?</div>
+              <div id="prev-cta-sub" style="font-size:0.85rem;margin-bottom:0.75rem;transition:color 0.15s;">Join hundreds of Jamaican entrepreneurs.</div>
+              <div id="prev-cta-btn" style="display:inline-block;padding:0.5rem 1.25rem;border-radius:6px;font-weight:700;font-size:0.82rem;transition:background 0.15s,color 0.15s;">Book Free Consultation</div>
             </div>
           </div>
         </div>
@@ -1284,7 +1285,7 @@ function updatePreview() {
   el.addEventListener("input", function(){
     var vl = document.getElementById(id+"-val");
     if (vl) vl.textContent = el.value;
-    updatePreview();
+    requestAnimationFrame(updatePreview);
   });
 });
 
