@@ -228,6 +228,59 @@
     });
   }
 
+
+  // ── Apply custom colours from config ──────────────────────
+  function applyColours(cfg) {
+    if (!cfg._colours) return;
+    var c = cfg._colours;
+    var root = document.documentElement;
+    if (c.navy)      root.style.setProperty("--navy",      c.navy);
+    if (c.navy)      root.style.setProperty("--navy-deep", shadeColor(c.navy, -20));
+    if (c.gold)      root.style.setProperty("--gold",      c.gold);
+    if (c.gold)      root.style.setProperty("--gold-light",shadeColor(c.gold, 20));
+    if (c.cream)     root.style.setProperty("--cream",     c.cream);
+    if (c.heading)   root.style.setProperty("--text-heading", c.heading);
+    if (c.body)      root.style.setProperty("--text-body", c.body);
+    if (c.muted)     root.style.setProperty("--text-muted",c.muted);
+    // Section backgrounds via inline style injection
+    if (c.heroBg) {
+      var hero = document.querySelector(".hero");
+      if (hero) hero.style.background = c.heroBg;
+    }
+    if (c.sectionBg) {
+      document.querySelectorAll(".services-section,.pricing-section").forEach(function(el){
+        el.style.background = c.sectionBg;
+      });
+    }
+    if (c.ctaBg) {
+      var cta = document.querySelector(".cta-banner");
+      if (cta) cta.style.background = c.ctaBg;
+    }
+    // h1,h2,h3 colour
+    if (c.heading) {
+      document.querySelectorAll("h1,h2,h3,h4").forEach(function(el){
+        el.style.color = c.heading;
+      });
+    }
+  }
+
+  // ── Apply custom logo ──────────────────────────────────────
+  function applyLogo(cfg) {
+    if (!cfg._logo) return;
+    document.querySelectorAll(".nav__logo-img").forEach(function(img){
+      img.src = cfg._logo;
+    });
+  }
+
+  // Shade a hex colour lighter/darker
+  function shadeColor(hex, pct) {
+    var n = parseInt(hex.replace("#",""), 16);
+    var r = Math.min(255, Math.max(0, (n>>16) + pct));
+    var g = Math.min(255, Math.max(0, ((n>>8)&0xFF) + pct));
+    var b = Math.min(255, Math.max(0, (n&0xFF) + pct));
+    return "#" + [r,g,b].map(function(v){ return v.toString(16).padStart(2,"0"); }).join("");
+  }
+
   // ── Entry point ───────────────────────────────────────────
   document.addEventListener("DOMContentLoaded", function () {
     var page = document.body.dataset.page;
